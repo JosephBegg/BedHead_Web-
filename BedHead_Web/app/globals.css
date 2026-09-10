@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fff9f2;
+  --foreground: #1a1420;
+  --dawn: #e7deff;
+  --flash: #ff4b2e;
+  --flash-tint: #ffe4da;
+  --line: rgba(26, 20, 32, 0.12);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-dawn: var(--dawn);
+  --color-flash: var(--flash);
+  --color-flash-tint: var(--flash-tint);
+  --color-line: var(--line);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-bricolage);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #14101c;
+    --foreground: #f5efea;
+    --dawn: #241c38;
+    --flash: #ff6a4d;
+    --flash-tint: rgba(255, 106, 77, 0.18);
+    --line: rgba(245, 239, 234, 0.14);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes flash-pulse {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.flash-once {
+  animation: flash-pulse 1.4s ease-out 0.4s 1 both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash-once {
+    animation: none;
+    opacity: 0;
+  }
+}
