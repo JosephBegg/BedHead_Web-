@@ -5,15 +5,20 @@ import { mutation } from "./_generated/server";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const subscribe = mutation({
-  args: { email: v.string() },
+  args: { email: v.string(), agreedToTerms: v.boolean() },
   returns: v.object({
     status: v.union(
       v.literal("subscribed"),
       v.literal("already_subscribed"),
       v.literal("invalid_email"),
+      v.literal("must_agree"),
     ),
   }),
   handler: async (ctx, args) => {
+    if (!args.agreedToTerms) {
+      return { status: "must_agree" as const };
+    }
+
     const email = args.email.trim().toLowerCase();
     if (!EMAIL_PATTERN.test(email)) {
       return { status: "invalid_email" as const };
@@ -27,7 +32,10 @@ export const subscribe = mutation({
       return { status: "already_subscribed" as const };
     }
 
-    await ctx.db.insert("subscribers", { email });
+    await ctx.db.insert("subscribers", {
+      email,
+      agreedToTermsAt: Date.now(),
+    });
     return { status: "subscribed" as const };
   },
 });

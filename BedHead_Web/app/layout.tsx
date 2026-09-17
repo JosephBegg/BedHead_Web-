@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
+import CookieConsent from "@/components/CookieConsent";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -32,6 +33,7 @@ export default function RootLayout({
           className={`${bricolage.variable} ${inter.variable} antialiased`}
         >
           <ConvexClientProvider>{children}</ConvexClientProvider>
+          <CookieConsent />
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>

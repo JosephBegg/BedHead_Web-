@@ -12,5 +12,6 @@ export default defineSchema({
   }),
   subscribers: defineTable({
     email: v.string(),
+    agreedToTermsAt: v.optional(v.number()),
   }).index("by_email", ["email"]),
 });

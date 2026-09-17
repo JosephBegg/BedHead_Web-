@@ -2,6 +2,7 @@
 
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import Link from "next/link";
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -13,6 +14,7 @@ export default function Home() {
       <main>
         <Hero />
         <About />
+        <PricingComparison />
         <Signup />
       </main>
       <Footer />
@@ -34,14 +36,18 @@ function Hero() {
   return (
     <section className="mx-auto flex max-w-6xl flex-col gap-16 px-6 pb-24 pt-14 sm:px-8 md:flex-row md:items-center md:gap-12 md:pt-20">
       <div className="flex flex-col gap-6 md:max-w-md">
+        <span className="inline-flex w-fit items-center rounded-full border border-flash/30 bg-flash-tint px-4 py-1.5 text-sm font-medium text-flash">
+          Waitlist gets 70% off Premium for 3 months
+        </span>
         <h1 className="font-display text-5xl font-semibold leading-[0.95] tracking-tight sm:text-6xl md:text-7xl">
           Wake up
           <br />
           on camera.
         </h1>
         <p className="max-w-[38ch] text-lg leading-relaxed text-foreground/75">
-          One rule: no selfie, no silence. Take a photo of your very awake,
-          very unfixed bedhead, and BedHead finally shuts up.
+          BedHead is the alarm that makes you prove you&apos;re awake. Snap a
+          selfie to shut it off — no fingerprint, no swipe, no sneaking back
+          under the covers.
         </p>
         <a
           href="#signup"
@@ -158,27 +164,149 @@ function About() {
   );
 }
 
+const PLAN_ROWS: {
+  feature: string;
+  free: string | boolean;
+  premium: string | boolean;
+}[] = [
+  { feature: "Alarms at once", free: "5", premium: "5" },
+  { feature: "Alarm sounds", free: "1 default", premium: "100+" },
+  { feature: "Weekly recurring schedules", free: false, premium: true },
+  { feature: "Streak restores", free: "99p each", premium: "2 free / month" },
+  {
+    feature: "Sleep score from your wake-up photo",
+    free: false,
+    premium: true,
+  },
+  { feature: "Photo calendar of every wake-up", free: true, premium: true },
+  { feature: "Invite friends to groups (mobile)", free: true, premium: true },
+  { feature: "Share your wake-up photos", free: true, premium: true },
+];
+
+function PricingComparison() {
+  return (
+    <section className="mx-auto max-w-6xl px-6 py-24 sm:px-8">
+      <div className="flex flex-col gap-6 md:max-w-2xl">
+        <p className="font-display text-2xl font-medium leading-snug sm:text-3xl">
+          Free gets you moving. Premium gets you more.
+        </p>
+        <p className="text-lg leading-relaxed text-foreground/75">
+          Every Premium feature builds on Free — more sounds, more control,
+          and a clearer read on how you actually slept.
+        </p>
+      </div>
+
+      <div className="mt-12 overflow-x-auto">
+        <table className="w-full min-w-[520px] border-collapse text-left">
+          <thead>
+            <tr className="border-b border-line">
+              <th className="py-4 pr-4 text-sm font-medium text-foreground/60">
+                Feature
+              </th>
+              <th className="px-4 py-4 text-sm font-medium text-foreground/60">
+                Free
+              </th>
+              <th className="bg-flash-tint/40 px-4 py-4 text-sm font-medium text-flash">
+                Premium
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {PLAN_ROWS.map((row) => (
+              <tr key={row.feature} className="border-b border-line">
+                <td className="py-4 pr-4 text-foreground/85">
+                  {row.feature}
+                </td>
+                <td className="px-4 py-4">
+                  <PlanCell value={row.free} />
+                </td>
+                <td className="bg-flash-tint/40 px-4 py-4">
+                  <PlanCell value={row.premium} accent />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+        <p className="text-foreground/75">
+          Join the waitlist now and get 70% off Premium for your first 3
+          months at launch.
+        </p>
+        <a
+          href="#signup"
+          className="inline-flex w-fit shrink-0 items-center rounded-full bg-flash px-6 py-3 text-base font-medium text-white transition-transform hover:scale-[1.03] active:scale-[0.98]"
+        >
+          Join the waitlist
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function PlanCell({
+  value,
+  accent,
+}: {
+  value: string | boolean;
+  accent?: boolean;
+}) {
+  if (typeof value === "boolean") {
+    return value ? (
+      <CheckIcon
+        className={`h-5 w-5 ${accent ? "text-flash" : "text-foreground/70"}`}
+      />
+    ) : (
+      <span className="text-foreground/30">—</span>
+    );
+  }
+  return (
+    <span
+      className={accent ? "font-medium text-foreground" : "text-foreground/85"}
+    >
+      {value}
+    </span>
+  );
+}
+
 type Status = "idle" | "loading" | "success" | "already" | "error";
 
 function Signup() {
   const subscribe = useMutation(api.subscribers.subscribe);
   const [email, setEmail] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const honeypotRef = useRef<HTMLInputElement>(null);
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setEmail(e.target.value);
+  function resetIfNeeded() {
     if (status !== "idle" && status !== "loading") {
       setStatus("idle");
       setMessage("");
     }
   }
 
+  function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
+    setEmail(e.target.value);
+    resetIfNeeded();
+  }
+
+  function handleAgreedChange(e: ChangeEvent<HTMLInputElement>) {
+    setAgreed(e.target.checked);
+    resetIfNeeded();
+  }
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (honeypotRef.current?.value) {
+      return;
+    }
+
+    if (!agreed) {
+      setStatus("error");
+      setMessage("You need to agree to the Terms & Conditions to join.");
       return;
     }
 
@@ -191,13 +319,19 @@ function Signup() {
 
     setStatus("loading");
     try {
-      const result = await subscribe({ email: trimmed });
+      const result = await subscribe({
+        email: trimmed,
+        agreedToTerms: agreed,
+      });
       if (result.status === "subscribed") {
         setStatus("success");
         setMessage("You're on the list — we'll email you at launch.");
       } else if (result.status === "already_subscribed") {
         setStatus("already");
         setMessage("You're already on the list. Hang tight.");
+      } else if (result.status === "must_agree") {
+        setStatus("error");
+        setMessage("You need to agree to the Terms & Conditions to join.");
       } else {
         setStatus("error");
         setMessage("Enter a valid email address.");
@@ -218,13 +352,14 @@ function Signup() {
           Be the first to know when we launch
         </h2>
         <p className="text-foreground/70">
-          No spam. Just one email when BedHead is ready to download.
+          No spam. Just one email when BedHead is ready to download — plus
+          your 70% off Premium code, good for your first 3 months.
         </p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="mx-auto mt-8 flex max-w-lg flex-col gap-3 sm:flex-row sm:items-start"
+        className="mx-auto mt-8 flex max-w-lg flex-col gap-3"
         noValidate
       >
         <input
@@ -237,29 +372,52 @@ function Signup() {
           className="absolute h-0 w-0 opacity-0"
           style={{ left: "-9999px" }}
         />
-        <div className="flex-1">
-          <label htmlFor="email" className="sr-only">
-            Email address
-          </label>
-          <input
-            id="email"
-            type="email"
-            inputMode="email"
-            required
-            placeholder="you@example.com"
-            value={email}
-            onChange={handleChange}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+          <div className="flex-1">
+            <label htmlFor="email" className="sr-only">
+              Email address
+            </label>
+            <input
+              id="email"
+              type="email"
+              inputMode="email"
+              required
+              placeholder="you@example.com"
+              value={email}
+              onChange={handleEmailChange}
+              disabled={status === "loading"}
+              className="w-full rounded-full border border-line bg-background px-5 py-3 text-base outline-none transition-colors focus:border-flash disabled:opacity-60"
+            />
+          </div>
+          <button
+            type="submit"
             disabled={status === "loading"}
-            className="w-full rounded-full border border-line bg-background px-5 py-3 text-base outline-none transition-colors focus:border-flash disabled:opacity-60"
-          />
+            className="inline-flex items-center justify-center rounded-full bg-flash px-6 py-3 text-base font-medium text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100"
+          >
+            {status === "loading" ? "Joining…" : "Join the waitlist"}
+          </button>
         </div>
-        <button
-          type="submit"
-          disabled={status === "loading"}
-          className="inline-flex items-center justify-center rounded-full bg-flash px-6 py-3 text-base font-medium text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100"
-        >
-          {status === "loading" ? "Joining…" : "Join the waitlist"}
-        </button>
+
+        <label className="flex items-start gap-2 text-sm text-foreground/70 sm:justify-center">
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={handleAgreedChange}
+            disabled={status === "loading"}
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-line text-flash accent-flash focus:ring-flash disabled:opacity-60"
+          />
+          <span>
+            I agree to the{" "}
+            <Link
+              href="/terms"
+              target="_blank"
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              Terms &amp; Conditions
+            </Link>
+            .
+          </span>
+        </label>
       </form>
 
       {message && (
