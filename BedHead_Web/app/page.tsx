@@ -25,7 +25,7 @@ export default function Home() {
 function SiteHeader() {
   return (
     <header className="mx-auto flex max-w-6xl items-center px-6 pt-8 sm:px-8">
-      <span className="font-display text-lg font-semibold tracking-tight">
+      <span className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
         BedHead
       </span>
     </header>
@@ -40,14 +40,14 @@ function Hero() {
           Waitlist gets 70% off Premium for 3 months
         </span>
         <h1 className="font-display text-5xl font-semibold leading-[0.95] tracking-tight sm:text-6xl md:text-7xl">
-          Wake up
+          Take control
           <br />
-          on camera.
+          of your sleep.
         </h1>
         <p className="max-w-[38ch] text-lg leading-relaxed text-foreground/75">
-          BedHead is the alarm that makes you prove you&apos;re awake. Snap a
-          selfie to shut it off — no fingerprint, no swipe, no sneaking back
-          under the covers.
+          A selfie is the easiest way to keep yourself accountable every
+          morning. No fingerprint, no swipe, no sneaking back under the
+          covers.
         </p>
         <a
           href="#signup"
@@ -115,13 +115,19 @@ const FEATURES = [
     icon: CameraIcon,
     title: "Selfie to dismiss",
     description:
-      "No fingerprint, no swipe. The alarm only stops when it sees your face — awake, upright, unmistakably you.",
+      "No fingerprint, no swipe. The alarm only stops when it sees your face: awake, upright, unmistakably you.",
   },
   {
     icon: FlameIcon,
     title: "Streaks that stick",
     description:
-      "Every selfie extends your streak. Miss a morning and watch it reset — the same pressure that gets you out for a run.",
+      "Every selfie extends your streak. Miss a morning and watch it reset. That's the same pressure that gets you out for a run.",
+  },
+  {
+    icon: UsersIcon,
+    title: "Wake-up groups",
+    description:
+      "Invite friends into a group and see each other's streaks every morning. Knowing they'll notice if you skip is accountability that actually works.",
   },
   {
     icon: ImageIcon,
@@ -139,18 +145,18 @@ function About() {
           The snooze button doesn&apos;t ask for proof.
         </p>
         <p className="text-lg leading-relaxed text-foreground/75">
-          It just asks you to try again in nine minutes — and most mornings,
+          It just asks you to try again in nine minutes, and most mornings,
           you don&apos;t. BedHead skips the trust exercise. The alarm keeps
           going until you take a selfie: wide awake, on camera, undeniably
           up.
         </p>
       </div>
 
-      <div className="mt-16 grid grid-cols-1 gap-10 border-t border-line pt-12 sm:grid-cols-3 sm:gap-8">
+      <div className="mt-16 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
         {FEATURES.map(({ icon: Icon, title, description }) => (
           <div
             key={title}
-            className="flex flex-col gap-3 sm:border-l sm:border-line sm:pl-8 sm:first:border-l-0 sm:first:pl-0"
+            className="flex flex-col gap-3 border-t border-line pt-6"
           >
             <Icon className="h-6 w-6 text-flash" />
             <h3 className="font-display text-xl font-medium">{title}</h3>
@@ -169,8 +175,8 @@ const PLAN_ROWS: {
   free: string | boolean;
   premium: string | boolean;
 }[] = [
-  { feature: "Alarms at once", free: "5", premium: "5" },
-  { feature: "Alarm sounds", free: "1 default", premium: "100+" },
+  { feature: "Alarms at once", free: "5", premium: "50+" },
+  { feature: "Alarm sounds", free: "3", premium: "100+" },
   { feature: "Weekly recurring schedules", free: false, premium: true },
   { feature: "Streak restores", free: "99p each", premium: "2 free / month" },
   {
@@ -178,8 +184,13 @@ const PLAN_ROWS: {
     free: false,
     premium: true,
   },
-  { feature: "Photo calendar of every wake-up", free: true, premium: true },
-  { feature: "Invite friends to groups (mobile)", free: true, premium: true },
+  {
+    feature: "Alarm stats & insights",
+    free: "Basic dashboard",
+    premium: "Advanced dashboard",
+  },
+  { feature: "Photo calendar", free: "Last 7 days", premium: "Full history" },
+  { feature: "Invite friends to groups", free: true, premium: true },
   { feature: "Share your wake-up photos", free: true, premium: true },
 ];
 
@@ -191,7 +202,7 @@ function PricingComparison() {
           Free gets you moving. Premium gets you more.
         </p>
         <p className="text-lg leading-relaxed text-foreground/75">
-          Every Premium feature builds on Free — more sounds, more control,
+          Every Premium feature builds on Free: more sounds, more control,
           and a clearer read on how you actually slept.
         </p>
       </div>
@@ -258,7 +269,7 @@ function PlanCell({
         className={`h-5 w-5 ${accent ? "text-flash" : "text-foreground/70"}`}
       />
     ) : (
-      <span className="text-foreground/30">—</span>
+      <span className="text-foreground/30">-</span>
     );
   }
   return (
@@ -325,7 +336,7 @@ function Signup() {
       });
       if (result.status === "subscribed") {
         setStatus("success");
-        setMessage("You're on the list — we'll email you at launch.");
+        setMessage("You're on the list. We'll email you at launch.");
       } else if (result.status === "already_subscribed") {
         setStatus("already");
         setMessage("You're already on the list. Hang tight.");
@@ -352,8 +363,8 @@ function Signup() {
           Be the first to know when we launch
         </h2>
         <p className="text-foreground/70">
-          No spam. Just one email when BedHead is ready to download — plus
-          your 70% off Premium code, good for your first 3 months.
+          No spam. Just one email when BedHead is ready to download, plus
+          your 70% off Premium code for your first 3 months.
         </p>
       </div>
 
@@ -479,6 +490,25 @@ function FlameIcon({ className }: { className?: string }) {
       className={className}
     >
       <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+    </svg>
+  );
+}
+
+function UsersIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   );
 }

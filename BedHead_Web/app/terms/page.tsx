@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions — BedHead",
+  title: "BedHead Terms & Conditions",
   description: "Terms & Conditions for the BedHead launch waitlist.",
 };
 
@@ -42,8 +42,8 @@ export default function Terms() {
           </h2>
           <p className="leading-relaxed">
             We collect your email for one purpose only: to send you a
-            one-time discount code — 70% off your first 3 months of BedHead
-            Premium — when the app launches, plus a short heads-up that
+            one-time discount code (70% off your first 3 months of BedHead
+            Premium) when the app launches, plus a short heads-up that
             launch has happened. We don&apos;t use it for anything else, and
             we don&apos;t sell or share it with third parties.
           </p>
@@ -57,7 +57,7 @@ export default function Terms() {
             We keep your email on the waitlist until launch, after which
             it&apos;s used to send your discount code and then deleted from
             our marketing list. You can ask us to remove it sooner at any
-            time — see &ldquo;Contact us&rdquo; below.
+            time. See &ldquo;Contact us&rdquo; below.
           </p>
         </section>
 
@@ -80,7 +80,7 @@ export default function Terms() {
           </h2>
           <p className="leading-relaxed">
             You can leave the waitlist and have your email deleted at any
-            time, free of charge — just get in touch. Every launch email
+            time, free of charge. Just get in touch. Every launch email
             we send will also include an unsubscribe link.
           </p>
         </section>

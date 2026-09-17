@@ -16,9 +16,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "BedHead — the alarm you can't sleep through",
+  title: "BedHead: take control of your mornings",
   description:
-    "BedHead is an alarm app that only stops going off when you take a selfie. Join the waitlist for launch.",
+    "BedHead is the alarm that keeps you accountable with a selfie. Join the waitlist for 70% off Premium at launch.",
 };
 
 export default function RootLayout({
