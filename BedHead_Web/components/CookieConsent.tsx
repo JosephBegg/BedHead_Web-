@@ -33,7 +33,7 @@ export default function CookieConsent() {
     try {
       window.localStorage.setItem(STORAGE_KEY, value);
     } catch {
-      // Local storage unavailable — the banner just won't be remembered.
+      // Local storage unavailable; the banner just won't be remembered.
     }
     setDismissed(true);
   }
@@ -46,7 +46,7 @@ export default function CookieConsent() {
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-background/95 px-6 py-4 backdrop-blur sm:px-8">
       <div className="mx-auto flex max-w-6xl flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-foreground/70">
-          We use local storage to remember your cookie choice — no
+          We use local storage only to remember your cookie choice. No
           third-party tracking cookies. See our{" "}
           <Link
             href="/terms"
